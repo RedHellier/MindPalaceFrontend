@@ -3,6 +3,7 @@
 import React from "react";
 import LoginForm from "@/components/LoginForm";
 import { supabase } from "../supabaseClient"
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 const LoginSection: React.FC = () => {
     async function handleLogin(email: string, password: string) : Promise<void>
@@ -21,6 +22,22 @@ const LoginSection: React.FC = () => {
     
       if (data.session) {
         console.log("Login successful. Session:", data.session);
+
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError || !sessionData?.session) {
+          console.log('User not signed in or session is invalid');
+          return; // Or redirect the user to login
+        }
+
+          const accessToken = sessionData.session.access_token;
+
+          await fetch(`${backendURL}/topic/`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+
       } else {
         console.warn("Login succeeded but no session returned.");
       }
