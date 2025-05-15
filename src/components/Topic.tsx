@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import clsx from "clsx";
 import house1 from "@/assets/house1.jpg";
 import igloo from "@/assets/igloo.jpg";
+import square from "@/assets/square.jpg";
 
 interface TopicProps {
     title: string;
@@ -19,23 +19,24 @@ const Topic = (props: TopicProps) => {
         router.push(`/${page}`);
     };
     return (
-        <div className="flex flex-col items-center justify-center">
-            <a href={`/${title}`}>
+        <div className="flex flex-col items-center justify-center m-8">
+            <button
+                className="hover:cursor-pointer"
+                onClick={() => handleClick(title)}
+            >
                 <Image
-                    src={design === "house1" ? house1 : igloo}
+                    src={
+                        design === "house1"
+                            ? house1
+                            : design === "igloo"
+                            ? igloo
+                            : square
+                    }
                     width="200"
                     height="300"
-                    alt="house1"
+                    alt={`${title} image`}
                 ></Image>
-            </a>
-            <button
-                onClick={() => handleClick(title)}
-                className={clsx(
-                    "flex flex-col items-center w-1/4 p-4 m-2 bg-white rounded-lg hover:cursor-pointer",
-                    colour,
-                )}
-            >
-                <h1>{props.title}</h1>
+                <h1 className={colour}>{title.replace("_", " ")}</h1>
             </button>
         </div>
     );

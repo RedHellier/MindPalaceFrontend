@@ -52,6 +52,12 @@ export default function Topics() {
                         colour={topic.colour}
                     />
                 ))}
+                <Topic
+                    key="0"
+                    title="new_topic"
+                    design="square"
+                    colour="text-black"
+                />
             </div>
         </div>
     );
