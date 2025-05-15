@@ -8,7 +8,6 @@ const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 const LoginSection: React.FC = () => {
     async function handleLogin(email: string, password: string) : Promise<void>
     {
-      console.log("got into handle loginb");
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -43,7 +42,12 @@ const LoginSection: React.FC = () => {
       }
     }
 
-  return <LoginForm onLogin={handleLogin} />;
+  return (
+    <div className="flex items-center justify-center min-h-screen p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <LoginForm onLogin={handleLogin} />
+    </div>
+  );
+
 };
 
 export default LoginSection;
