@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link"; 
 import { supabase } from "../supabaseClient"
-const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+const minPassLength = 6;
 
 export default function SignUpForm() {
   const [firstName, setFirstName] = useState("");
@@ -14,40 +14,63 @@ export default function SignUpForm() {
   const [error, setError] = useState("");
 
   async function handleSignup(firstName : string, lastame : string, email: string, password: string) : Promise<void>
-        {
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-          });
-    
-          if (error) {
-            console.error("Login failed:", error.message);
-            alert("Login failed: " + error.message);
+    {
+        const trimmedEmail = email.trim();
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(trimmedEmail)) {
+            setError("Please enter a valid email address.");
             return;
-          }
-        
-          if (data.session) {
-            console.log("Login successful. Session:", data.session);
-    
-            const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    
-            if (sessionError || !sessionData?.session) {
-              console.log('User not signed in or session is invalid');
-              return; // Or redirect the user to login
-            }
-    
-              const accessToken = sessionData.session.access_token;
-    
-              await fetch(`${backendURL}/topic/`, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`
-                }
-              });
-    
-          } else {
-            console.warn("Login succeeded but no session returned.");
-          }
         }
+
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        });
+
+        if (signUpError) {
+            console.error(signUpError.message);
+            setError(signUpError.message || "Error during signup"); 
+            return;
+        }
+
+        const user = authData.user;
+        if (!user) {
+            console.error("No user returned from sign up");
+            setError("No user returned from sign up"); 
+
+            return;
+        }
+
+        // Sign in the user immediately after signup
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (signInError) {
+            console.error("Error signing in:", signInError.message);
+            setError(signInError.message || "Error signing in");
+            return;
+        }
+
+        // Now try to insert the profile
+        const { error: profileInsertError } = await supabase
+            .from("users")
+            .insert({
+            id: user.id,
+            "First Name": firstName,
+            "Last Name": lastName,
+            });
+
+        if (profileInsertError) {
+            console.error("Error inserting user profile:", profileInsertError.message);
+            setError(profileInsertError.message || "Error creating profile");
+            return;
+        }
+
+        alert("User inserted successfully!");
+    }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,9 +85,13 @@ export default function SignUpForm() {
       return;
     }
 
+    if (password.length < minPassLength) {
+      setError(`Password must be at least ${minPassLength} characters`);
+      return;
+    }
+
     setError("");
-    alert("about to sign up");
-    //handleSignup(firstName, lastName, email, password);
+    handleSignup(firstName, lastName, email, password);
   };
 
   return (
