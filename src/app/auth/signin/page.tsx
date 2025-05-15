@@ -1,12 +1,12 @@
-import LoginSection from "@/components/LoginSection";
+import LoginForm from "@/components/LoginForm";
 
 export default function SignInPage() {
 
 return (
     <>
         <main>
-            <LoginSection />
+            <LoginForm />
         </main>
-      </>
+    </>
 );
 }
