@@ -19,7 +19,7 @@ export default function NewTopicPage() {
         }
         const { data: sessionData } = await supabase.auth.getSession();
         const accessToken = sessionData.session?.access_token;
-        alert("new topic time: " + title + ", " + design + ", " + colour);
+
         await fetch(backendURL + "/topic", {
             method: "POST",
             headers: {
@@ -31,7 +31,10 @@ export default function NewTopicPage() {
                 design,
                 colour,
             }),
+        }).then(async (res) => {
+            console.log(res.status);
         });
+
         return;
     };
 
