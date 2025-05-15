@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
+import Topic from "@/components/Topic";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 type UserTopic = {
@@ -42,13 +43,16 @@ export default function Topics() {
     return (
         <div>
             <h1>Topics Page</h1>
-            <ul className="">
+            <div className="flex items-center justify-center h-[500px]">
                 {topics.map((topic: UserTopic) => (
-                    <li key={topic.id} className="ml-5">
-                        {topic.topics.title}
-                    </li>
+                    <Topic
+                        key={topic.id}
+                        title={topic.topics.title}
+                        design={topic.design}
+                        colour={topic.colour}
+                    />
                 ))}
-            </ul>
+            </div>
         </div>
     );
 }
