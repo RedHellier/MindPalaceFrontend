@@ -1,14 +1,47 @@
+'use client';
+
 import React, { useState } from "react";
+import Link from "next/link"; 
+import { supabase } from "../supabaseClient"
+import { useRouter } from "next/navigation";
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
-interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
-}
-
-export default function LoginForm ( props :  LoginFormProps) {
+export default function LoginForm () {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  async function handleLogin(email: string, password: string) : Promise<void>
+      {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+  
+        if (error) {
+          console.error("Login failed:", error.message);
+          alert("Login failed: " + error.message);
+          return;
+        }
+      
+        if (data.session) {
+          console.log("Login successful. Session:", data.session);
+  
+          const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  
+          if (sessionError || !sessionData?.session) {
+            console.log('User not signed in or session is invalid');
+            return; // Or redirect the user to login
+          }
+  
+           router.push("/topics");
+  
+        } else {
+          console.warn("Login succeeded but no session returned.");
+        }
+      }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,10 +49,12 @@ export default function LoginForm ( props :  LoginFormProps) {
       setError("Email and password are required.");
       return;
     }
-    props.onLogin(email, password);
+    handleLogin(email, password);
   };
 
   return (
+   <div className="flex items-center justify-center min-h-screen p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+
     <form
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md space-y-4"
@@ -71,6 +106,16 @@ export default function LoginForm ( props :  LoginFormProps) {
       >
         Sign In
       </button>
+
+      <div className="text-center text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link href="/auth/signup" className="text-blue-600 hover:underline">
+                Create one
+            </Link>
+      </div>
+
+
     </form>
+    </div>
   );
 };
