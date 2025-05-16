@@ -21,21 +21,18 @@ export default function Subtopics() {
     const [subtopics, setSubtopics] = useState([]);
 
     const searchParams = useSearchParams();
-    const topic = searchParams.get('topic');
+    const topic = searchParams.get('topic') as string;
 
     const getSubtopics = async (topic : string) => {
         const { data: sessionData } = await supabase.auth.getSession();
         const accessToken = sessionData.session?.access_token;
 
-        const data = await fetch(`${backendURL}/topic/subtopic`, {
-            method : "POST",
+    const data = await fetch(`${backendURL}/topic/subtopic?topic=${encodeURIComponent(topic)}`, {
+            method : "GET",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
-            },
-            body : JSON.stringify({
-              topic
-            })
+            }
         }).then(async (res) => {
             return await res.json();
         });
@@ -56,6 +53,7 @@ export default function Subtopics() {
                 {subtopics.map((subtopic: Subtopic) => (
                     <Subtopic
                         key={subtopic.id}
+                        topicTitle={topic}
                         title={subtopic.title}
                         design={subtopic.design}
                         colour={subtopic.colour}
@@ -64,6 +62,7 @@ export default function Subtopics() {
                 <Subtopic
                     key="0"
                     title="new_subtopic"
+                    topicTitle={topic}
                     design="square"
                     colour="text-black"
                 />

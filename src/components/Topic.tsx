@@ -22,7 +22,20 @@ const Topic = (props: TopicProps) => {
         <div className="flex flex-col items-center justify-center m-8">
             <button
                 className="hover:cursor-pointer"
-                onClick={() => handleClick(title)}
+                onClick={
+                    
+                    () => 
+                        {
+                            if (title !== "new_topic")
+                            {
+                                handleClick(title)
+                            }
+                            else
+                            {
+                                router.push(`/${title}`);
+                            }
+                        }
+                }
             >
                 <Image
                     src={

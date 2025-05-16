@@ -6,17 +6,18 @@ import square from "@/assets/square.jpg";
 
 interface SubtopicProps {
     title: string;
+    topicTitle : string;
     design: string;
     colour: string;
 }
 
 const Subtopic = (props: SubtopicProps) => {
     const router = useRouter();
-    const { title, design, colour } = props;
-    console.log(design);
+    const { title, topicTitle, design, colour } = props;
 
     const handleClick = (page: string) => {
 
+        alert("to implement getting cards or creating cards for existing subtopic");
         //implement bringing up cards here.
         router.push(`/${page}`);
     };
@@ -24,7 +25,21 @@ const Subtopic = (props: SubtopicProps) => {
         <div className="flex flex-col items-center justify-center m-8">
             <button
                 className="hover:cursor-pointer"
-                onClick={() => handleClick(title)}
+                onClick={
+                    
+                    () => 
+                        {
+                            if (title !== "new_subtopic")
+                            {
+                                handleClick(title)
+                            }
+                            else
+                            {
+                                
+                                router.push(`/subtopics/${title}?topic=${topicTitle}`);
+                            }
+                        }
+                }
             >
                 <Image
                     src={
