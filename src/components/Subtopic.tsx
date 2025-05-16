@@ -4,19 +4,21 @@ import house1 from "@/assets/house1.jpg";
 import igloo from "@/assets/igloo.jpg";
 import square from "@/assets/square.jpg";
 
-interface TopicProps {
+interface SubtopicProps {
     title: string;
     design: string;
     colour: string;
 }
 
-const Topic = (props: TopicProps) => {
+const Subtopic = (props: SubtopicProps) => {
     const router = useRouter();
     const { title, design, colour } = props;
     console.log(design);
 
-    const handleClick = (title: string) => {
-        router.push(`/subtopics?topic=${encodeURIComponent(title)}`);
+    const handleClick = (page: string) => {
+
+        //implement bringing up cards here.
+        router.push(`/${page}`);
     };
     return (
         <div className="flex flex-col items-center justify-center m-8">
@@ -42,4 +44,4 @@ const Topic = (props: TopicProps) => {
     );
 };
 
-export default Topic;
+export default Subtopic;
