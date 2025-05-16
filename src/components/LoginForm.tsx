@@ -3,9 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link"; 
 import { supabase } from "../supabaseClient"
+import { useRouter } from "next/navigation";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function LoginForm () {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -34,13 +36,7 @@ export default function LoginForm () {
             return; // Or redirect the user to login
           }
   
-            const accessToken = sessionData.session.access_token;
-  
-            await fetch(`${backendURL}/topic/`, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`
-              }
-            });
+           router.push("/topics");
   
         } else {
           console.warn("Login succeeded but no session returned.");
