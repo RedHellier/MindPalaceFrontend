@@ -4,18 +4,20 @@ import house1 from "@/assets/house1.jpg";
 import igloo from "@/assets/igloo.jpg";
 import square from "@/assets/square.jpg";
 
-interface TopicProps {
+interface SubtopicProps {
     title: string;
+    topicTitle : string;
     design: string;
     colour: string;
 }
 
-const Topic = (props: TopicProps) => {
+const Subtopic = (props: SubtopicProps) => {
     const router = useRouter();
-    const { title, design, colour } = props;
-    console.log(design);
+    const { title, topicTitle, design, colour } = props;
 
     const handleClick = (title: string) => {
+        alert("to implement getting cards or creating cards for existing subtopic");
+
         if (title !== "new_topic") 
         {
             router.push(`/subtopics?topic=${encodeURIComponent(title)}`);
@@ -25,6 +27,7 @@ const Topic = (props: TopicProps) => {
             router.push(`/${title}`);
         }
     };
+
     return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col items-center space-y-4 w-60">
             <button
@@ -52,4 +55,4 @@ const Topic = (props: TopicProps) => {
     );
 };
 
-export default Topic;
+export default Subtopic;

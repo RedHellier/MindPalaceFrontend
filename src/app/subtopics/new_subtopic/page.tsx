@@ -1,16 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../../supabaseClient";
 import clsx from "clsx";
+import { useSearchParams } from "next/navigation";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
-export default function NewTopicPage() {
+export default function NewSubTopicPage() {
   const [title, setTitle] = useState("");
   const [design, setDesign] = useState("house1");
   const [colour, setColour] = useState("text-black");
   const [error, setError] = useState("");
+
+  const searchParams = useSearchParams();
+  const topic = searchParams.get("topic");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,16 +26,21 @@ export default function NewTopicPage() {
     const { data: sessionData } = await supabase.auth.getSession();
     const accessToken = sessionData.session?.access_token;
 
-    await fetch(`${backendURL}/topic`, {
+    await fetch(`${backendURL}/topic/subtopic`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ title, design, colour }),
+      body: JSON.stringify({
+        topic,
+        title,
+        design,
+        colour,
+      }),
     });
 
-    // Optionally reset fields or navigate
+    // Optionally add success redirect or form reset
   };
 
   return (
@@ -40,7 +49,7 @@ export default function NewTopicPage() {
         onSubmit={handleSubmit}
         className="max-w-md w-full bg-white rounded-2xl shadow-md p-6 space-y-5"
       >
-        <h2 className="text-xl font-semibold text-gray-700 text-center">Create a New Topic</h2>
+        <h2 className="text-xl font-semibold text-gray-700 text-center">Create a New Subtopic</h2>
 
         {error && <div className="text-red-500 text-sm">{error}</div>}
 
@@ -97,7 +106,7 @@ export default function NewTopicPage() {
           type="submit"
           className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition duration-200"
         >
-          Create New Topic
+          Create New Subtopic
         </button>
       </form>
     </div>
