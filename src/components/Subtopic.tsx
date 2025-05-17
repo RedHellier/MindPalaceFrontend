@@ -15,31 +15,24 @@ const Subtopic = (props: SubtopicProps) => {
     const router = useRouter();
     const { title, topicTitle, design, colour } = props;
 
-    const handleClick = (page: string) => {
-
+    const handleClick = (title: string) => {
         alert("to implement getting cards or creating cards for existing subtopic");
-        //implement bringing up cards here.
-        router.push(`/${page}`);
+
+        if (title !== "new_topic") 
+        {
+            router.push(`/subtopics?topic=${encodeURIComponent(title)}`);
+        } 
+        else 
+        {
+            router.push(`/${title}`);
+        }
     };
+
     return (
-        <div className="flex flex-col items-center justify-center m-8">
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col items-center space-y-4 w-60">
             <button
                 className="hover:cursor-pointer"
-                onClick={
-                    
-                    () => 
-                        {
-                            if (title !== "new_subtopic")
-                            {
-                                handleClick(title)
-                            }
-                            else
-                            {
-                                
-                                router.push(`/subtopics/${title}?topic=${topicTitle}`);
-                            }
-                        }
-                }
+                onClick={() => handleClick(title) }
             >
                 <Image
                     src={
@@ -52,8 +45,11 @@ const Subtopic = (props: SubtopicProps) => {
                     width="200"
                     height="300"
                     alt={`${title} image`}
+                    className="rounded-lg"
                 ></Image>
-                <h1 className={colour}>{title.replace("_", " ")}</h1>
+                <h1 className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}>
+                    {title.replace("_", " ")}
+                </h1>
             </button>
         </div>
     );

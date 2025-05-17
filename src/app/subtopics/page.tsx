@@ -48,24 +48,28 @@ export default function Subtopics() {
 
     return (
         <div>
-            <h1>Subtopics Page</h1>
-            <div className="flex items-center justify-center h-[500px]">
-                {subtopics.map((subtopic: Subtopic) => (
+            <div className="min-h-screen bg-gray-50 py-10 px-4 font-[family-name:var(--font-geist-sans)]">
+                <div className="max-w-6xl mx-auto">
+                <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Choose a Subtopic</h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+                    {subtopics.map((subtopic: Subtopic) => (
+                        <Subtopic
+                            key={subtopic.id}
+                            topicTitle={topic}
+                            title={subtopic.title}
+                            design={subtopic.design}
+                            colour={subtopic.colour}
+                        />
+                    ))}
                     <Subtopic
-                        key={subtopic.id}
+                        key="0"
+                        title="new_subtopic"
                         topicTitle={topic}
-                        title={subtopic.title}
-                        design={subtopic.design}
-                        colour={subtopic.colour}
+                        design="square"
+                        colour="text-black"
                     />
-                ))}
-                <Subtopic
-                    key="0"
-                    title="new_subtopic"
-                    topicTitle={topic}
-                    design="square"
-                    colour="text-black"
-                />
+                </div>
+                </div>
             </div>
         </div>
     );
