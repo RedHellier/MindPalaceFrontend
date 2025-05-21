@@ -17,15 +17,7 @@ const Subtopic = (props: SubtopicProps) => {
 
     const handleClick = (title: string) => {
         alert("to implement getting cards or creating cards for existing subtopic");
-
-        if (title !== "new_topic") 
-        {
-            router.push(`/subtopics?topic=${encodeURIComponent(title)}`);
-        } 
-        else 
-        {
-            router.push(`/${title}`);
-        }
+        router.push(`/${topicTitle}/${title}`);
     };
 
     return (
