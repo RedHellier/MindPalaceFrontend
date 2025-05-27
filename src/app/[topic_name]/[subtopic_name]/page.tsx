@@ -2,14 +2,37 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../../supabaseClient";
-import Subtopic from "@/components/Subtopic";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 import { useParams } from "next/navigation";
+import CardViewer from "@/components/CardViewer";
+
+type CardWithAnswers = 
+{
+    answer_type: string;
+    created_at: string;
+    id: string;
+    level: number;
+    question: string;
+    subtopic_id: string;
+    answers: 
+    {
+        card_id: string;
+        correct_answer: string;
+        id: string;
+    } | 
+    {
+        card_id: string;
+        correct_index: number;
+        id: string;
+        options: string[];
+    }
+}
 
 export default function Quiz()
 {
-   const [cardsWithAnswers, setCardsWithAnswers] = useState([]);
-    
+    const [chosenCards, setChosenCards] = useState<CardWithAnswers[]>([]);
+
+    let cardsWithAnswers : CardWithAnswers[] = [];
     const { topic_name, subtopic_name } = useParams<{ topic_name: string, subtopic_name : string }>();
 
     const getCards = async (topicTitle: string, subtopicTitle : string) => {
@@ -28,8 +51,28 @@ export default function Quiz()
             }).then(async (res) => {
                 return await res.json();
             });
-            console.log(data);
-            //setSubtopics(data);
+
+            if (data && data.length > 0)
+            {
+                cardsWithAnswers = data as CardWithAnswers[];
+
+                //TODO - develop choosing cards:
+                        //-- randomly
+                        // -- unsolved cards (you need to consult mastery table or join with the mastery table)
+                        // - more options?
+            }
+            else
+            {
+                //GENERATE new cards and set cardsWithAnswers to them.
+
+            }
+
+            //for starters, randomly select 10 cards out of all cards.
+
+            const shuffled = [...cardsWithAnswers].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 10);
+
+            setChosenCards(selected);
         };
     
         useEffect(() => {
@@ -43,7 +86,9 @@ export default function Quiz()
             <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
                 {topic_name} - {subtopic_name}
             </h1>
-            <p className="text-center">Quiz content goes here</p>
+
+            {chosenCards.length > 0 && <CardViewer cards={chosenCards} />}
+
         </div>
     );
 }
