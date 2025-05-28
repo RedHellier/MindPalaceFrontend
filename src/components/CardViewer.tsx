@@ -27,16 +27,21 @@ interface CardViewerProps {
     cards: CardWithAnswers[];
 }
 
+const LoadingSpinner: React.FC = () => {
+    return (
+        <div className="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md font-[family-name:var(--font-geist-sans)]">
+            <div className="flex flex-col items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                <p className="text-gray-600 text-lg">Loading cards...</p>
+            </div>
+        </div>
+    );
+};
+
 const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
     const [showOnlyCorrectAnswer, setShowOnlyCorrectAnswer] = useState(false); // For "Show Answer" functionality
-
-    if (cards.length === 0) {
-        return <p className="text-center text-gray-500">No cards available.</p>;
-    }
-
-    const currentCard = cards[currentIndex];
 
     // Reset state when card changes
     useEffect(() => {
@@ -44,6 +49,11 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
         setShowOnlyCorrectAnswer(false);
     }, [currentIndex]);
 
+        // Show loading animation when no cards are available
+    if (cards.length === 0) {
+        return <LoadingSpinner />;
+    }
+    const currentCard = cards[currentIndex];
     const handleNext = () => {
         if (currentIndex < cards.length - 1) {
             setCurrentIndex((prev) => prev + 1);

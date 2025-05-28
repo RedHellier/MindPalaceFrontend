@@ -77,7 +77,7 @@ export default function Quiz()
                 {topic_name} - {subtopic_name}
             </h1>
 
-            {chosenCards.length > 0 && <CardViewer cards={chosenCards} />}
+            <CardViewer cards={chosenCards} />
 
         </div>
     );
