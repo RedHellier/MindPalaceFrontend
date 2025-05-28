@@ -41,6 +41,7 @@ const Subtopic = (props: SubtopicProps) => {
                 <h1 className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}>
                     {title.replace("_", " ")}
                 </h1>
+                
             </button>
         </div>
     );

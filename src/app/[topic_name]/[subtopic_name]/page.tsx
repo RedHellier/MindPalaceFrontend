@@ -5,28 +5,8 @@ import { supabase } from "../../../supabaseClient";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 import { useParams } from "next/navigation";
 import CardViewer from "@/components/CardViewer";
+import { CardWithAnswers } from "@/components/CardViewer"; 
 
-type CardWithAnswers = 
-{
-    answer_type: string;
-    created_at: string;
-    id: string;
-    level: number;
-    question: string;
-    subtopic_id: string;
-    answers: 
-    {
-        card_id: string;
-        correct_answer: string;
-        id: string;
-    } | 
-    {
-        card_id: string;
-        correct_index: number;
-        id: string;
-        options: string[];
-    }
-}
 
 export default function Quiz()
 {
@@ -64,11 +44,21 @@ export default function Quiz()
             else
             {
                 //GENERATE new cards and set cardsWithAnswers to them.
+                const data = await fetch(`${backendURL}/card?`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({ topic : topicTitle , subtopic : subtopicTitle }),
+                }).then(async (res) => {
+                    return await res.json();
+                });
 
+                cardsWithAnswers = data as CardWithAnswers[];
             }
 
             //for starters, randomly select 10 cards out of all cards.
-
             const shuffled = [...cardsWithAnswers].sort(() => 0.5 - Math.random());
             const selected = shuffled.slice(0, 10);
 

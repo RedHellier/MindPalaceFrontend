@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-type CardWithAnswers = {
+export type CardWithAnswers = {
     answer_type: string;
     created_at: string;
     id: string;

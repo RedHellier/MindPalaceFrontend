@@ -13,7 +13,6 @@ interface TopicProps {
 const Topic = (props: TopicProps) => {
     const router = useRouter();
     const { title, design, colour } = props;
-    console.log(design);
 
     const handleClick = (title: string) => {
         router.push(`/${title}`);
