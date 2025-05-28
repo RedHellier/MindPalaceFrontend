@@ -44,7 +44,7 @@ export default function Quiz()
             else
             {
                 //GENERATE new cards and set cardsWithAnswers to them.
-                const data = await fetch(`${backendURL}/card?`, {
+                const data = await fetch(`${backendURL}/card`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
