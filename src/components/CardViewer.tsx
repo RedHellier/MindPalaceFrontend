@@ -2,6 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 
+// Add custom CSS for 3D flip animation
+const flipStyles = `
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  .duration-600 {
+    transition-duration: 600ms;
+  }
+`;
+
 export type CardWithAnswers = {
     answer_type: string;
     created_at: string;
@@ -29,7 +42,7 @@ interface CardViewerProps {
 
 const LoadingSpinner: React.FC = () => {
     return (
-        <div className="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md font-[family-name:var(--font-geist-sans)]">
+            <div className="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md font-[family-name:var(--font-geist-sans)]">
             <div className="flex flex-col items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
                 <p className="text-gray-600 text-lg">Loading cards...</p>
@@ -42,18 +55,22 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
     const [showOnlyCorrectAnswer, setShowOnlyCorrectAnswer] = useState(false); // For "Show Answer" functionality
+    const [isFlipping, setIsFlipping] = useState(false);
 
     // Reset state when card changes
     useEffect(() => {
         setSelectedOptionIndex(null);
         setShowOnlyCorrectAnswer(false);
+        setIsFlipping(false);
     }, [currentIndex]);
 
-        // Show loading animation when no cards are available
+    // Show loading animation when no cards are available
     if (cards.length === 0) {
         return <LoadingSpinner />;
     }
+
     const currentCard = cards[currentIndex];
+
     const handleNext = () => {
         if (currentIndex < cards.length - 1) {
             setCurrentIndex((prev) => prev + 1);
@@ -78,7 +95,12 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     };
 
     const handleShowAnswer = () => {
-        setShowOnlyCorrectAnswer(true);
+        setIsFlipping(true);
+        // After flip animation completes, show the answer
+        setTimeout(() => {
+            setShowOnlyCorrectAnswer(true);
+            setIsFlipping(false);
+        }, 300); // Half of the flip duration (600ms total, flip at 300ms)
     };
 
     const isSelectAnswer = (
@@ -116,6 +138,8 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
 
 
     return (
+        <>
+                    <style>{flipStyles}</style>
         <div className="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md font-[family-name:var(--font-geist-sans)]">
             <div className="mb-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-2">
@@ -136,7 +160,15 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
             )}
 
             {currentCard.answer_type === "select" && isSelectAnswer(currentCard.answers) && (
-                <div className="mt-3 space-y-2">
+                <div 
+                    className={`mt-3 space-y-2 transition-transform duration-600 transform-gpu ${
+                        isFlipping ? 'rotate-y-180' : 'rotate-y-0'
+                    }`}
+                    style={{
+                        transformStyle: 'preserve-3d',
+                        perspective: '1000px'
+                    }}
+                >
                     {currentCard.answers.options.map((option, index) => {
                         if (showOnlyCorrectAnswer && index !== currentCard.answers.correct_index) {
                             return null; // Hide wrong options if "Show Answer" was clicked
@@ -181,6 +213,9 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
                                 key={index}
                                 onClick={() => handleOptionClick(index)}
                                 className={`p-3 rounded-md border-2 ${borderColor} ${bgColor} ${textColor} ${ (selectedOptionIndex === null && !showOnlyCorrectAnswer) ? 'cursor-pointer ' + hoverBgColor : 'cursor-default'} transition duration-150`}
+                                style={{
+                                    backfaceVisibility: 'hidden'
+                                }}
                             >
                                 {option}
                             </div>
@@ -221,6 +256,8 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
                 </button>
             </div>
         </div>
+        /</>
+        
     );
 };
 
