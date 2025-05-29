@@ -16,7 +16,6 @@ const Subtopic = (props: SubtopicProps) => {
     const { title, topicTitle, design, colour } = props;
 
     const handleClick = (title: string) => {
-        alert("to implement getting cards or creating cards for existing subtopic");
         router.push(`/${topicTitle}/${title}`);
     };
 
@@ -42,6 +41,7 @@ const Subtopic = (props: SubtopicProps) => {
                 <h1 className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}>
                     {title.replace("_", " ")}
                 </h1>
+                
             </button>
         </div>
     );

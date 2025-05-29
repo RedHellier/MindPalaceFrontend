@@ -32,7 +32,6 @@ export default function Topics() {
         }).then(async (res) => {
             return await res.json();
         });
-        console.log(data);
         setTopics(data);
     };
 

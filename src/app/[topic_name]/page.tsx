@@ -36,8 +36,11 @@ export default function Subtopics() {
         }).then(async (res) => {
             return await res.json();
         });
-        console.log(data);
-        setSubtopics(data);
+        
+        if (data && data.length > 0)
+        {
+            setSubtopics(data);
+        }
     };
 
     useEffect(() => {
@@ -54,7 +57,7 @@ export default function Subtopics() {
                         Choose a Subtopic
                     </h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-                        {subtopics.map((subtopic: Subtopic) => (
+                        {subtopics && subtopics.map((subtopic: Subtopic) => (
                             <Subtopic
                                 key={subtopic.id}
                                 topicTitle={topic_name}

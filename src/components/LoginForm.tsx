@@ -27,7 +27,6 @@ export default function LoginForm () {
         }
       
         if (data.session) {
-          console.log("Login successful. Session:", data.session);
   
           const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   
