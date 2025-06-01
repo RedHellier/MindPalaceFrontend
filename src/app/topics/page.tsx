@@ -37,29 +37,34 @@ export default function Topics() {
 
     useEffect(() => {
         getTopics();
-    }, []);
+    }, [topics]);
 
     return (
         <div>
             <div className="min-h-screen bg-gray-50 py-10 px-4 font-[family-name:var(--font-geist-sans)]">
                 <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Choose a Topic</h1>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-                {topics.map((topic: UserTopic) => (
-                    <Topic
-                        key={topic.id}
-                        title={topic.topics.title}
-                        design={topic.design}
-                        colour={topic.colour}
-                    />
-                ))}
-                <Topic
-                    key="0"
-                    title="new_topic"
-                    design="square"
-                    colour="text-black"
-                />
-                </div>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+                        Choose a Topic
+                    </h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+                        {topics.map((topic: UserTopic) => (
+                            <Topic
+                                key={topic.id}
+                                id={topic.id}
+                                title={topic.topics.title}
+                                design={topic.design}
+                                colour={topic.colour}
+                                refresh={getTopics}
+                            />
+                        ))}
+                        <Topic
+                            key="0"
+                            id="0"
+                            title="new_topic"
+                            design="square"
+                            colour="text-black"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

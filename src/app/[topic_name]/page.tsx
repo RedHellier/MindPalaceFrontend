@@ -60,14 +60,17 @@ export default function Subtopics() {
                         {subtopics && subtopics.map((subtopic: Subtopic) => (
                             <Subtopic
                                 key={subtopic.id}
+                                id={subtopic.id}
                                 topicTitle={topic_name}
                                 title={subtopic.title}
                                 design={subtopic.design}
                                 colour={subtopic.colour}
+                                refresh={getSubtopics}
                             />
                         ))}
                         <Subtopic
                             key="0"
+                            id="0"
                             title="new_subtopic"
                             topicTitle={topic_name}
                             design="square"
