@@ -1,21 +1,54 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { supabase } from "@/supabaseClient";
 import house1 from "@/assets/house1.jpg";
 import igloo from "@/assets/igloo.jpg";
 import square from "@/assets/square.jpg";
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 interface TopicProps {
+    id: string;
     title: string;
     design: string;
     colour: string;
+    refresh?: () => void;
 }
 
 const Topic = (props: TopicProps) => {
     const router = useRouter();
-    const { title, design, colour } = props;
+    const { id, title, design, colour, refresh } = props;
 
     const handleClick = (title: string) => {
         router.push(`/${title}`);
+    };
+
+    const handleDelete = async (id: string) => {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData.session?.access_token;
+
+        // Implement delete functionality here
+        console.log(`Delete topic with id: ${id}`);
+        await fetch(`${backendURL}/topic/`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ id }),
+        }).then(async (response) => {
+            if (!response.ok) {
+                const { error } = await response.json();
+                console.error("Error deleting topic:", error);
+                alert("Failed to delete topic. Please try again.");
+            } else {
+                const data = await response.json();
+                console.log("Topic deleted successfully:", data);
+            }
+        });
+
+        if (refresh) {
+            refresh();
+        }
     };
 
     return (
@@ -43,6 +76,14 @@ const Topic = (props: TopicProps) => {
                     {title.replace("_", " ")}
                 </h1>
             </button>
+            {id !== "0" && (
+                <button
+                    className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
+                    onClick={() => handleDelete(id)}
+                >
+                    Delete
+                </button>
+            )}
         </div>
     );
 };
