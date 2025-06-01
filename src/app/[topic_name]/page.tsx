@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import Subtopic from "@/components/Subtopic";
-const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+import BackButton from "@/components/BackButton";
 import { useParams } from "next/navigation";
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 type Subtopic = {
     colour: string;
@@ -36,9 +37,8 @@ export default function Subtopics() {
         }).then(async (res) => {
             return await res.json();
         });
-        
-        if (data && data.length > 0)
-        {
+
+        if (data && data.length > 0) {
             setSubtopics(data);
         }
     };
@@ -51,27 +51,29 @@ export default function Subtopics() {
 
     return (
         <div>
+            <BackButton path="/topics" buttonText="Back to Topics" />
             <div className="min-h-screen bg-gray-50 py-10 px-4 font-[family-name:var(--font-geist-sans)]">
                 <div className="max-w-6xl mx-auto">
                     <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
                         Choose a Subtopic
                     </h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-                        {subtopics && subtopics.map((subtopic: Subtopic) => (
-                            <Subtopic
-                                key={subtopic.id}
-                                id={subtopic.id}
-                                topicTitle={topic_name}
-                                title={subtopic.title}
-                                design={subtopic.design}
-                                colour={subtopic.colour}
-                                refresh={getSubtopics}
-                            />
-                        ))}
+                        {subtopics &&
+                            subtopics.map((subtopic: Subtopic) => (
+                                <Subtopic
+                                    key={subtopic.id}
+                                    id={subtopic.id}
+                                    topicTitle={topic_name}
+                                    title={subtopic.title}
+                                    design={subtopic.design}
+                                    colour={subtopic.colour}
+                                    refresh={getSubtopics}
+                                />
+                            ))}
                         <Subtopic
                             key="0"
                             id="0"
-                            title="new_subtopic"
+                            title="new subtopic"
                             topicTitle={topic_name}
                             design="square"
                             colour="text-black"

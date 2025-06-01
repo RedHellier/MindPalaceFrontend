@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../../supabaseClient";
 import clsx from "clsx";
-import { displayName } from "@/lib/utils";
+import BackButton from "@/components/BackButton";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
-type NewTopicProps = {
-    topicTitle: string;
-};
-
-export default function NewTopicPage({ topicTitle }: NewTopicProps) {
+export default function NewTopicPage() {
     const [title, setTitle] = useState("");
     const [design, setDesign] = useState("house1");
     const [colour, setColour] = useState("text-black");
@@ -27,13 +23,13 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
         const { data: sessionData } = await supabase.auth.getSession();
         const accessToken = sessionData.session?.access_token;
 
-        await fetch(`${backendURL}/subtopic`, {
+        await fetch(`${backendURL}/topic`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ topicTitle, title, design, colour }),
+            body: JSON.stringify({ title, design, colour }),
         });
 
         // Optionally reset fields or navigate
@@ -41,12 +37,13 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50 p-8 font-[family-name:var(--font-geist-sans)]">
+            <BackButton path="/topics" buttonText="Back to Topics" />
             <form
                 onSubmit={handleSubmit}
                 className="max-w-md w-full bg-white rounded-2xl shadow-md p-6 space-y-5"
             >
                 <h2 className="text-xl font-semibold text-gray-700 text-center">
-                    Create a New Subtopic for {displayName(topicTitle)}
+                    Create a New Topic
                 </h2>
 
                 {error && <div className="text-red-500 text-sm">{error}</div>}
@@ -119,7 +116,7 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
                     type="submit"
                     className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition duration-200"
                 >
-                    Create New Subtopic
+                    Create New Topic
                 </button>
             </form>
         </div>

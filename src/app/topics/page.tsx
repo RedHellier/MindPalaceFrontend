@@ -60,7 +60,7 @@ export default function Topics() {
                         <Topic
                             key="0"
                             id="0"
-                            title="new_topic"
+                            title="new topic"
                             design="square"
                             colour="text-black"
                         />
