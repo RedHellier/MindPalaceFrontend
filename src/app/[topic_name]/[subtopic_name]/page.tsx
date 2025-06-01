@@ -10,6 +10,7 @@ import { displayName } from "@/lib/utils";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function Quiz() {
+    const [subtopicExists, setSubtopicExists] = useState<boolean>(false);
     const [chosenCards, setChosenCards] = useState<CardWithAnswers[]>([]);
 
     let cardsWithAnswers: CardWithAnswers[] = [];
@@ -18,19 +19,48 @@ export default function Quiz() {
         subtopic_name: string;
     }>();
 
-    const getCards = async (topicTitle: string, subtopicTitle: string) => {
+    const getTokenandSetHeaders = async () => {
         const { data: sessionData } = await supabase.auth.getSession();
         const accessToken = sessionData.session?.access_token;
 
         const getParams = new URLSearchParams();
-        getParams.append("topic", topicTitle);
-        getParams.append("subtopic", subtopicTitle);
+        getParams.append("topic", topic_name);
+        getParams.append("subtopic", subtopic_name);
 
-        const data = await fetch(`${backendURL}/card?${getParams}`, {
+        return {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
             },
+            params: getParams,
+        };
+    };
+
+    const doesSubtopicExist: () => Promise<boolean> = async () => {
+        const { headers, params } = await getTokenandSetHeaders();
+
+        const data: { exists: boolean } = await fetch(
+            `${backendURL}/subtopic/exists?${params}`,
+            {
+                headers: headers,
+            },
+        )
+            .then(async (res) => {
+                return await res.json();
+            })
+            .catch((error) => {
+                console.error("Error checking subtopic existence:", error);
+                return false; // Assume subtopic does not exist if there's an error})
+            });
+
+        return data.exists;
+    };
+
+    const getCards = async () => {
+        const { headers, params } = await getTokenandSetHeaders();
+
+        const data = await fetch(`${backendURL}/card?${params}`, {
+            headers: headers,
         }).then(async (res) => {
             return await res.json();
         });
@@ -46,13 +76,10 @@ export default function Quiz() {
             //GENERATE new cards and set cardsWithAnswers to them.
             const data = await fetch(`${backendURL}/card`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
+                headers: headers,
                 body: JSON.stringify({
-                    topic: topicTitle,
-                    subtopic: subtopicTitle,
+                    topic: topic_name,
+                    subtopic: subtopic_name,
                 }),
             }).then(async (res) => {
                 return await res.json();
@@ -70,21 +97,41 @@ export default function Quiz() {
 
     useEffect(() => {
         if (topic_name && subtopic_name) {
-            getCards(topic_name, subtopic_name);
+            doesSubtopicExist().then((exists) => {
+                if (exists) {
+                    setSubtopicExists(true);
+                    getCards();
+                } else {
+                    setSubtopicExists(false);
+                }
+            });
         }
-    }, [topic_name, subtopic_name]);
+    }, [topic_name, subtopic_name, subtopicExists]);
 
     return (
         <div>
             <BackButton
-                path="/topics"
+                path={"/" + topic_name}
                 buttonText={"Back to " + displayName(topic_name)}
             />
-            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-                {displayName(topic_name)} - {displayName(subtopic_name)}
-            </h1>
+            {(subtopicExists && (
+                <>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+                        {displayName(topic_name)} - {displayName(subtopic_name)}
+                    </h1>
 
-            <CardViewer cards={chosenCards} />
+                    <CardViewer cards={chosenCards} />
+                </>
+            )) || (
+                <div className="text-center mt-10">
+                    <h1 className="text-2xl font-bold text-red-600">
+                        Subtopic does not exist!
+                    </h1>
+                    <p className="text-gray-600 mt-4">
+                        Please create the subtopic first.
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
