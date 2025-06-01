@@ -10,7 +10,7 @@ import { displayName } from "@/lib/utils";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function Quiz() {
-    const [subtopicExists, setSubtopicExists] = useState<boolean>(false);
+    const [subtopicExists, setSubtopicExists] = useState<boolean>(true);
     const [chosenCards, setChosenCards] = useState<CardWithAnswers[]>([]);
 
     let cardsWithAnswers: CardWithAnswers[] = [];
