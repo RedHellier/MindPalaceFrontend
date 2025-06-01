@@ -4,6 +4,7 @@ import { supabase } from "@/supabaseClient";
 import house1 from "@/assets/house1.jpg";
 import igloo from "@/assets/igloo.jpg";
 import square from "@/assets/square.jpg";
+import { displayName } from "@/lib/utils";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 interface SubtopicProps {
@@ -65,7 +66,7 @@ const Subtopic = (props: SubtopicProps) => {
                 <h1
                     className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
                 >
-                    {title.replace("_", " ")}
+                    {displayName(title, " ")}
                 </h1>
             </button>
             {id !== "0" && (

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link"; 
 import { supabase } from "../supabaseClient"
 import { useRouter } from "next/navigation";
-const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function LoginForm () {
   const router = useRouter();
@@ -107,7 +106,7 @@ export default function LoginForm () {
       </button>
 
       <div className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don`t have an account?{" "}
             <Link href="/auth/signup" className="text-blue-600 hover:underline">
                 Create one
             </Link>
