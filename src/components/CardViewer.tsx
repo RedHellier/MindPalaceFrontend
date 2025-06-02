@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+import { supabase } from "../supabaseClient";
+import React, { useState, useEffect, useRef } from "react";
 
 // Add custom CSS for 3D flip animation
 const flipStyles = `
@@ -57,11 +59,15 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     const [showOnlyCorrectAnswer, setShowOnlyCorrectAnswer] = useState(false); // For "Show Answer" functionality
     const [isFlipping, setIsFlipping] = useState(false);
 
+    const isMounted = useRef(false);
+
+    let correctAnswers : number = 0;
     // Reset state when card changes
     useEffect(() => {
         setSelectedOptionIndex(null);
         setShowOnlyCorrectAnswer(false);
         setIsFlipping(false);
+        isMounted.current = false;
     }, [currentIndex]);
 
     // Show loading animation when no cards are available
@@ -74,16 +80,6 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     const handleNext = () => {
         if (currentIndex < cards.length - 1) {
             setCurrentIndex((prev) => prev + 1);
-            // setSelectedOptionIndex(null); // Already handled by useEffect
-            // setShowOnlyCorrectAnswer(false); // Already handled by useEffect
-        }
-    };
-
-    const handlePrev = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex((prev) => prev - 1);
-            // setSelectedOptionIndex(null); // Already handled by useEffect
-            // setShowOnlyCorrectAnswer(false); // Already handled by useEffect
         }
     };
 
@@ -109,8 +105,28 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
         return "options" in answer && "correct_index" in answer;
     };
 
+    const recordAnswer = async (isCorrect : boolean, currentCardId : string) =>
+    {
+            const { data: sessionData } = await supabase.auth.getSession();
+            const accessToken = sessionData.session?.access_token;
+
+            console.log("recorded answer");
+            //fire and forget - do not await.
+            fetch(`${backendURL}/card/recordAnswer`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },                body: JSON.stringify({
+                    isCorrect,
+                    card_id: currentCardId
+                }),
+            });
+    }
+    
     let isNextButtonDisabled = currentIndex === cards.length - 1;
     let showShowAnswerButton = false;
+
 
     if (currentCard.answer_type === "select" && isSelectAnswer(currentCard.answers)) {
         if (selectedOptionIndex === null) {
@@ -120,6 +136,7 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
             if (isCorrect) {
                 // 2. if the user selected the correct answer (border turns green) enable next button.
                 // isNextButtonDisabled is already false unless it's the last card
+                correctAnswers++;
             } else {
                 // 3. if the user selected the wrong answer
                 isNextButtonDisabled = true; // Next stays disabled
@@ -130,11 +147,25 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
                     isNextButtonDisabled = currentIndex === cards.length - 1;
                 }
             }
+
+            if (!isMounted.current)
+            {
+                isMounted.current = true; 
+                //record user answer in our DB
+                recordAnswer(isCorrect, currentCard.id);
+            }
+
+            if (correctAnswers > 0)
+            {
+                //TODO: prepare final slide that shows summary of the quiz
+            }
+
         }
     } else if (currentCard.answer_type === "free_text") {
         // For free_text, let's assume "Next" is enabled by default unless it's the last card.
         // If free_text also needs an interaction (e.g., reveal answer), this logic would change.
     }
+
 
 
     return (
@@ -225,14 +256,6 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
             )}
 
             <div className="flex justify-between mt-6 space-x-2">
-                <button
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0}
-                    className="flex-1 py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition duration-200 disabled:bg-blue-300 disabled:text-gray-100 disabled:cursor-not-allowed"
-                >
-                    Previous
-                </button>
-
                 {showShowAnswerButton && currentCard.answer_type === "select" && (
                     <button
                         onClick={handleShowAnswer}
