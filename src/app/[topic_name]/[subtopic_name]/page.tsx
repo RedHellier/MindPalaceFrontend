@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../../../supabaseClient";
 import { useParams } from "next/navigation";
 import CardViewer from "@/components/CardViewer";
@@ -13,6 +13,8 @@ export default function Quiz() {
     const [subtopicExists, setSubtopicExists] = useState<boolean>(true);
     const [chosenCards, setChosenCards] = useState<CardWithAnswers[]>([]);
 
+    const isMounted = useRef(false);
+    
     let cardsWithAnswers: CardWithAnswers[] = [];
     const { topic_name, subtopic_name } = useParams<{
         topic_name: string;
@@ -73,17 +75,22 @@ export default function Quiz() {
             // -- unsolved cards (you need to consult mastery table or join with the mastery table)
             // - more options?
         } else {
-            //GENERATE new cards and set cardsWithAnswers to them.
-            const data = await fetch(`${backendURL}/card`, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify({
-                    topic: topic_name,
-                    subtopic: subtopic_name,
-                }),
-            }).then(async (res) => {
-                return await res.json();
-            });
+
+            if (!isMounted.current)
+            {
+                isMounted.current = true; 
+                //GENERATE new cards and set cardsWithAnswers to them.
+                const data = await fetch(`${backendURL}/card`, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify({
+                        topic: topic_name,
+                        subtopic: subtopic_name,
+                    }),
+                }).then(async (res) => {
+                    return await res.json();
+                });
+            }
 
             cardsWithAnswers = data as CardWithAnswers[];
         }
@@ -106,6 +113,8 @@ export default function Quiz() {
                 }
             });
         }
+        isMounted.current = false;
+
     }, [topic_name, subtopic_name, subtopicExists]);
 
     return (
