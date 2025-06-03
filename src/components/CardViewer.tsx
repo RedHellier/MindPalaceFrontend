@@ -61,7 +61,6 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [isQuizComplete, setIsQuizComplete] = useState(false);
 
-
     const isMounted = useRef(false);
 
     // Reset state when card changes
@@ -88,13 +87,10 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
     };
 
     const handleNewQuiz = () => {
-        setCurrentIndex(0);
-        setSelectedOptionIndex(null);
-        setShowOnlyCorrectAnswer(false);
-        setIsFlipping(false);
-        setCorrectAnswers(0);
-        setIsQuizComplete(false);
+        //forces a hard reload the page which will get new random cards
+        window.location.href = window.location.href;
     };
+
     const handleOptionClick = (index: number) => {
         // Allow selection only if an option hasn't been selected yet OR if "Show Answer" hasn't been activated
         if (selectedOptionIndex === null && !showOnlyCorrectAnswer) {
@@ -122,7 +118,6 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
             const { data: sessionData } = await supabase.auth.getSession();
             const accessToken = sessionData.session?.access_token;
 
-            console.log("recorded answer");
             //fire and forget - do not await.
             fetch(`${backendURL}/card/recordAnswer`, {
                 method: "POST",
@@ -166,13 +161,6 @@ const CardViewer: React.FC<CardViewerProps> = ({ cards }) => {
                     setCorrectAnswers((prev) => prev +1);
                 }
             }
-
-            if (correctAnswers > 0)
-            {
-                console.log(`correct answers ${correctAnswers}`);
-                //TODO: prepare final slide that shows summary of the quiz
-            }
-
         }
     } else if (currentCard.answer_type === "free_text") {
         // For free_text, let's assume "Next" is enabled by default unless it's the last card.
