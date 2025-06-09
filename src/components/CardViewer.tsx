@@ -17,6 +17,10 @@ const flipStyles = `
   }
 `;
 
+export type Answer {
+    card_id: string
+}
+
 export type CardWithAnswers = {
     answer_type: string;
     created_at: string;
@@ -243,7 +247,7 @@ if (isQuizComplete) {
                     }}
                 >
                     {currentCard.answers.options.map((option, index) => {
-                        if (showOnlyCorrectAnswer && index !== currentCard.answers.correct_index) {
+                        if (showOnlyCorrectAnswer && 'correct_index' in currentCard.answers && index !== currentCard.answers.correct_index) {
                             return null; // Hide wrong options if "Show Answer" was clicked
                         }
 
