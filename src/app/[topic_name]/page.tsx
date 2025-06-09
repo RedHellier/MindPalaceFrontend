@@ -78,6 +78,7 @@ export default function Subtopics() {
         if (topic_name && topicExists) {
             getSubtopics();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topic_name, topicExists]);
 
     return (
