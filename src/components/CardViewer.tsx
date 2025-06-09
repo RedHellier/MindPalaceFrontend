@@ -17,10 +17,6 @@ const flipStyles = `
   }
 `;
 
-export type Answer {
-    card_id: string
-}
-
 export type CardWithAnswers = {
     answer_type: string;
     created_at: string;
