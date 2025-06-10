@@ -4,6 +4,7 @@ import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import clsx from "clsx";
 import { displayName } from "@/lib/utils";
+import NewPopUp from "@/components/NewPopUp";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -16,6 +17,7 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
     const [design, setDesign] = useState("house1");
     const [colour, setColour] = useState("text-black");
     const [error, setError] = useState("");
+    const [showPopUp, setShowPopUp] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,6 +36,13 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
                 Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ topicTitle, title, design, colour }),
+        }).then(async (response) => {
+            if (response.ok) {
+                setShowPopUp(true);
+            } else {
+                const errorData = await response.json();
+                setError(errorData.error || "Failed to create subtopic.");
+            }
         });
 
         // Optionally reset fields or navigate
@@ -122,6 +131,9 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
                     Create New Subtopic
                 </button>
             </form>
+            {showPopUp && (
+                <NewPopUp backTitle={topicTitle} toNewTitle={title} />
+            )}
         </div>
     );
 }
