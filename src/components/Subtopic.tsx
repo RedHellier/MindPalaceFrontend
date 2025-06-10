@@ -13,7 +13,7 @@ interface SubtopicProps {
     topicTitle: string;
     design: string;
     colour: string;
-    refresh?: (topicTitle: string) => void;
+    refresh: (topicTitle: string) => void;
 }
 
 const Subtopic = (props: SubtopicProps) => {
@@ -39,9 +39,7 @@ const Subtopic = (props: SubtopicProps) => {
             body: JSON.stringify({ id }),
         });
 
-        if (refresh) {
-            refresh(topicTitle);
-        }
+        refresh(topicTitle);
     };
 
     return (
@@ -69,14 +67,12 @@ const Subtopic = (props: SubtopicProps) => {
                     {displayName(title, " ")}
                 </h1>
             </button>
-            {id !== "0" && (
-                <button
-                    className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
-                    onClick={() => handleDelete(id)}
-                >
-                    Delete
-                </button>
-            )}
+            <button
+                className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
+                onClick={() => handleDelete(id)}
+            >
+                Delete
+            </button>
         </div>
     );
 };

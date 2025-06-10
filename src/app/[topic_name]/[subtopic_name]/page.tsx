@@ -8,13 +8,13 @@ import { CardWithAnswers } from "@/components/CardViewer";
 import BackButton from "@/components/BackButton";
 import { displayName } from "@/lib/utils";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
-const QUIZ_LENGTH : number = 10;
+const QUIZ_LENGTH: number = 10;
 export default function Quiz() {
     const [subtopicExists, setSubtopicExists] = useState<boolean>(true);
     const [chosenCards, setChosenCards] = useState<CardWithAnswers[]>([]);
 
     const isMounted = useRef(false);
-    
+
     let cardsWithAnswers: CardWithAnswers[] = [];
     const { topic_name, subtopic_name } = useParams<{
         topic_name: string;
@@ -70,22 +70,17 @@ export default function Quiz() {
             return await res.json();
         });
 
-        let getMoreCards : boolean = false;
-        if (data) 
-        {
+        let getMoreCards: boolean = false;
+        if (data) {
             cardsWithAnswers = data as CardWithAnswers[];
-            if (data.length < QUIZ_LENGTH)
-            {
+            if (data.length < QUIZ_LENGTH) {
                 getMoreCards = true;
             }
+        }
 
-        } 
-        
-        if (getMoreCards || !data)
-        {
-            if (!isMounted.current)
-            {
-                isMounted.current = true; 
+        if (getMoreCards || !data) {
+            if (!isMounted.current) {
+                isMounted.current = true;
                 //GENERATE new cards and set cardsWithAnswers to them.
                 const newData = await fetch(`${backendURL}/card`, {
                     method: "POST",
@@ -101,7 +96,6 @@ export default function Quiz() {
                 //add new generated cards to the existing cards that are not yet mastered.
                 cardsWithAnswers = [...cardsWithAnswers, ...newData];
             }
-            
         }
 
         //randomly select QUIZ_LENGTH cards out of all cards.
@@ -124,6 +118,7 @@ export default function Quiz() {
         }
         isMounted.current = false;
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topic_name, subtopic_name, subtopicExists]);
 
     return (
