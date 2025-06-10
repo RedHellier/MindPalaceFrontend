@@ -12,7 +12,7 @@ interface TopicProps {
     title: string;
     design: string;
     colour: string;
-    refresh?: () => void;
+    refresh: () => void;
 }
 
 const Topic = (props: TopicProps) => {
@@ -47,9 +47,7 @@ const Topic = (props: TopicProps) => {
             }
         });
 
-        if (refresh) {
-            refresh();
-        }
+        refresh();
     };
 
     return (
@@ -77,14 +75,12 @@ const Topic = (props: TopicProps) => {
                     {displayName(title, " ")}
                 </h1>
             </button>
-            {id !== "0" && (
-                <button
-                    className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
-                    onClick={() => handleDelete(id)}
-                >
-                    Delete
-                </button>
-            )}
+            <button
+                className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
+                onClick={() => handleDelete(id)}
+            >
+                Delete
+            </button>
         </div>
     );
 };
