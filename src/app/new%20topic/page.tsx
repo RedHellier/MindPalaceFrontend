@@ -48,6 +48,7 @@ export default function NewTopicPage() {
         <div className="flex items-center justify-center min-h-screen bg-gray-50 p-8 font-[family-name:var(--font-geist-sans)]">
             <BackButton path="/topics" buttonText="Back to Topics" />
             <form
+                data-cy="new-topic-form"
                 onSubmit={handleSubmit}
                 className="max-w-md w-full bg-white rounded-2xl shadow-md p-6 space-y-5"
             >
@@ -65,6 +66,7 @@ export default function NewTopicPage() {
                         Title
                     </label>
                     <input
+                        data-cy="topic-title"
                         id="title"
                         type="text"
                         value={title}
@@ -82,6 +84,7 @@ export default function NewTopicPage() {
                         Design
                     </label>
                     <select
+                        data-cy="topic-design"
                         id="design"
                         value={design}
                         onChange={(e) => setDesign(e.target.value)}
@@ -101,6 +104,7 @@ export default function NewTopicPage() {
                         Colour
                     </label>
                     <select
+                        data-cy="topic-colour"
                         id="colour"
                         value={colour}
                         onChange={(e) => setColour(e.target.value)}
@@ -122,6 +126,7 @@ export default function NewTopicPage() {
                 </div>
 
                 <button
+                    data-cy="save-topic-btn"
                     type="submit"
                     className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition duration-200"
                 >

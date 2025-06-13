@@ -51,36 +51,39 @@ const Topic = (props: TopicProps) => {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col items-center space-y-4 w-60">
-            <button
-                className="hover:cursor-pointer"
-                onClick={() => handleClick(title)}
-            >
-                <Image
-                    src={
-                        design === "house1"
-                            ? house1
-                            : design === "igloo"
-                            ? igloo
-                            : square
-                    }
-                    width="200"
-                    height="300"
-                    alt={`${title} image`}
-                    className="rounded-lg"
-                ></Image>
-                <h1
-                    className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
+        <div data-cy="topic-item">
+            <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col items-center space-y-4 w-60">
+                <button
+                    className="hover:cursor-pointer"
+                    onClick={() => handleClick(title)}
                 >
-                    {displayName(title, " ")}
-                </h1>
-            </button>
-            <button
-                className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
-                onClick={() => handleDelete(id)}
-            >
-                Delete
-            </button>
+                    <Image
+                        src={
+                            design === "house1"
+                                ? house1
+                                : design === "igloo"
+                                ? igloo
+                                : square
+                        }
+                        width="200"
+                        height="300"
+                        alt={`${title} image`}
+                        className="rounded-lg"
+                    ></Image>
+                    <h1
+                        className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
+                    >
+                        {displayName(title, " ")}
+                    </h1>
+                </button>
+                <button
+                    data-cy="delete-topic"
+                    className="text-white bg-red-500 px-4 py-2 rounded-xl hover:cursor-pointer"
+                    onClick={() => handleDelete(id)}
+                >
+                    Delete
+                </button>
+            </div>
         </div>
     );
 };

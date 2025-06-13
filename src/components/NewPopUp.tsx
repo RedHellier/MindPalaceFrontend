@@ -21,6 +21,7 @@ const NewPopUp: React.FC<NewPopUpProps> = ({ backTitle, toNewTitle }) => {
                     opic: {displayName(toNewTitle)}
                 </h1>
                 <button
+                    data-cy="popup-back-to-topics"
                     onClick={() =>
                         handleClick(backTitle ? `/${backTitle}` : "/topics")
                     }
@@ -30,6 +31,7 @@ const NewPopUp: React.FC<NewPopUpProps> = ({ backTitle, toNewTitle }) => {
                         (backTitle ? displayName(backTitle) : "Topics")}
                 </button>
                 <button
+                    data-cy="goto-topic"
                     onClick={() => handleClick(toNewTitle)}
                     className="absolute bottom-0 right-0 m-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
                 >
