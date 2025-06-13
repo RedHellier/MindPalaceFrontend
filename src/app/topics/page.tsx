@@ -27,21 +27,27 @@ type UserTopic = {
 };
 
 export default function Topics() {
-    const [topics, setTopics] = useState([]);
+    const [topics, setTopics] = useState<UserTopic[]>([]);
     const router = useRouter();
 
     const getTopics = async () => {
         const { data: sessionData } = await supabase.auth.getSession();
         const accessToken = sessionData.session?.access_token;
 
-        const data = await fetch(`${backendURL}/topic/`, {
+        const data : UserTopic[] = await fetch(`${backendURL}/topic/`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         }).then(async (res) => {
             return await res.json();
         });
-        setTopics(data);
+        
+        // Sort data by created_at descending (newest first)
+        const sortedData = data.sort((a, b) => {
+            return new Date(b.topics.created_at).getTime() - new Date(a.topics.created_at).getTime();
+        });
+
+        setTopics(sortedData);
     };
 
     useEffect(() => {
@@ -85,6 +91,7 @@ export default function Topics() {
                         </Carousel>
                     )}
                     <button
+                        data-cy="create-topic-btn"
                         onClick={() => router.push("/new topic")}
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300 mt-8"
                     >

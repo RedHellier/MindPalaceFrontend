@@ -21,6 +21,7 @@ const NewPopUp: React.FC<NewPopUpProps> = ({ backTitle, toNewTitle }) => {
                     opic: {displayName(toNewTitle)}
                 </h1>
                 <button
+                    data-cy="popup-back-to-topics"
                     onClick={() =>
                         handleClick(backTitle ? `/${backTitle}` : "/topics")
                     }

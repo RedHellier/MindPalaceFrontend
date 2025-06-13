@@ -54,6 +54,7 @@ export default function LoginForm () {
    <div className="flex items-center justify-center min-h-screen p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
 
     <form
+      data-cy="login-form"
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md space-y-4"
     >
