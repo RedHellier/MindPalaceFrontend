@@ -130,6 +130,7 @@ export default function Subtopics() {
                             </Carousel>
                         )}
                         <button
+                            data-cy="create-subtopic-btn"
                             onClick={() =>
                                 router.push(`/${topic_name}/new subtopic`)
                             }
