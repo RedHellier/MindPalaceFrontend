@@ -27,19 +27,38 @@ jobs:
           cd backend
           docker compose up -d
           
+      - name: Debug - Check running containers and ports
+        run: |
+          echo "=== Docker containers ==="
+          docker ps
+          echo "=== Port mappings ==="
+          docker port $(docker ps -q)
+          echo "=== Network listening ==="
+          netstat -tlnp
+          echo "=== Curl test backend ==="
+          curl -f http://localhost:5000 || echo "Backend not responding on localhost:5000"
+          
       - name: Install frontend dependencies
         run: npm ci
         
       - name: Install wait-on
         run: npm install -g wait-on
         
-      - name: Start frontend server
-        run: npm start &
+      - name: Build frontend (for Next.js)
+        run: npm run build
         
-      - name: Wait for servers to be ready
+      - name: Start frontend server in development mode
+        run: npm run dev &
+        
+      - name: Wait for backend to be ready
         run: |
-          wait-on http://localhost:5000 --timeout 60000
-          wait-on http://localhost:3000 --timeout 60000
+          echo "Waiting for backend..."
+          wait-on http://localhost:5000 --timeout 120000 --interval 2000 --verbose
+          
+      - name: Wait for frontend to be ready  
+        run: |
+          echo "Waiting for frontend..."
+          wait-on http://localhost:3000 --timeout 60000 --interval 2000 --verbose
         
       - name: Run Cypress tests
         run: npx cypress run
