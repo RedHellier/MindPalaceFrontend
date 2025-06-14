@@ -6,7 +6,7 @@ on:
 
 jobs:
   spin-backend:
-    uses: your-org/Pro0428-MindPalaceBackend/.github/workflows/spin-up-backend.yml@main
+    uses: https://github.com/fac-31/Pro0428-MindPalaceBackend/.github/workflows/spin-up-backend.yml@main
     secrets:
       OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
