@@ -27,13 +27,21 @@ jobs:
           cd backend
           docker compose up -d
           
-      - name: Wait for backend
-        run: sleep 10
-        
       - name: Install frontend dependencies
         run: npm ci
+        
+      - name: Install wait-on
+        run: npm install -g wait-on
+        
+      - name: Start frontend server
+        run: npm start &
+        
+      - name: Wait for servers to be ready
+        run: |
+          wait-on http://localhost:5000 --timeout 60000
+          wait-on http://localhost:3000 --timeout 60000
         
       - name: Run Cypress tests
         run: npx cypress run
         env:
-          CYPRESS_baseUrl: http://localhost:5000
+          CYPRESS_baseUrl: http://localhost:3000
