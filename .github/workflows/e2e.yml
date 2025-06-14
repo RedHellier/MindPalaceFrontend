@@ -40,7 +40,7 @@ jobs:
         run: |
           for i in {1..10}; do
             echo "Attempt $i: checking backend..."
-            if curl -f http://localhost:5000; then
+            if curl -f http://host.docker.internal:5000; then
               echo "Backend is ready"
               exit 0
             fi
