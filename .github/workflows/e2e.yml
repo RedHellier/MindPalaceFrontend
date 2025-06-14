@@ -1,0 +1,28 @@
+name: Cypress E2E on PR
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  spin-backend:
+    uses: your-org/Pro0428-MindPalaceBackend/.github/workflows/spin-up-backend.yml@main
+    secrets:
+      OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+  e2e:
+    needs: spin-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout frontend repo
+        uses: actions/checkout@v3
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run Cypress tests
+        run: npx cypress run
+        env:
+          CYPRESS_baseUrl: http://localhost:5000
