@@ -35,9 +35,20 @@ jobs:
           docker port $(docker ps -q)
           echo "=== Network listening ==="
           netstat -tlnp
-          echo "=== Curl test backend ==="
-          curl -f http://localhost:5000 || echo "Backend not responding on localhost:5000"
-          
+
+      - name: Wait for backend to be ready
+        run: |
+          for i in {1..10}; do
+            echo "Attempt $i: checking backend..."
+            if curl -f http://localhost:5000; then
+              echo "Backend is ready"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Backend failed to start"
+          exit 1
+
       - name: Install frontend dependencies
         run: npm ci
         
@@ -50,11 +61,6 @@ jobs:
       - name: Start frontend server in development mode
         run: npm run dev &
         
-      - name: Wait for backend to be ready
-        run: |
-          echo "Waiting for backend..."
-          wait-on http://localhost:5000 --timeout 120000 --interval 2000 --verbose
-          
       - name: Wait for frontend to be ready  
         run: |
           echo "Waiting for frontend..."
