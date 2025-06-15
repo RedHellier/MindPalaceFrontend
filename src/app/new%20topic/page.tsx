@@ -7,15 +7,33 @@ import BackButton from "@/components/BackButton";
 import NewPopUp from "@/components/NewPopUp";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Canvas from "@/components/Canvas";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 export default function NewTopicPage() {
     const [title, setTitle] = useState("");
-    const [design, setDesign] = useState("house1");
+    const [design, setDesign] = useState("000");
     const [colour, setColour] = useState("text-black");
     const [error, setError] = useState("");
     const [showPopUp, setShowPopUp] = useState(false);
+
+    const changeDesignElement = (
+        element: "roof" | "windows" | "doors",
+        direction: -1 | 1,
+    ) => {
+        console.log("Change ", element, " by ", direction);
+        const elementIndex =
+            element === "roof" ? 0 : element === "windows" ? 1 : 2;
+        let newRoofIndex: number = Number(design[elementIndex]) + direction;
+        newRoofIndex =
+            newRoofIndex < 0 ? 2 : newRoofIndex > 2 ? 0 : newRoofIndex;
+        const newDesign =
+            design.slice(0, elementIndex) +
+            newRoofIndex.toString() +
+            design.slice(elementIndex + 1);
+        setDesign(newDesign);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -98,13 +116,53 @@ export default function NewTopicPage() {
                     </select>
                 </div>
 
-                <div>
-                    <Button>
-                        <ArrowLeft />
-                    </Button>
-                    <Button>
-                        <ArrowRight />
-                    </Button>
+                <div className="flex flex-col items-center justify-between text-gray-600 mb-4">
+                    <Canvas width={250} height={300} design={design}></Canvas>
+                    <div className="flex items-center justify-between w-full mt-2">
+                        <Button
+                            onClick={() => changeDesignElement("roof", -1)}
+                            type="button"
+                        >
+                            <ArrowLeft />
+                        </Button>
+                        Roof
+                        <Button
+                            onClick={() => changeDesignElement("roof", 1)}
+                            type="button"
+                        >
+                            <ArrowRight />
+                        </Button>
+                    </div>
+                    <div className="flex items-center justify-between w-full mt-2">
+                        <Button
+                            onClick={() => changeDesignElement("windows", -1)}
+                            type="button"
+                        >
+                            <ArrowLeft />
+                        </Button>
+                        Windows
+                        <Button
+                            onClick={() => changeDesignElement("windows", 1)}
+                            type="button"
+                        >
+                            <ArrowRight />
+                        </Button>
+                    </div>
+                    <div className="flex items-center justify-between w-full mt-2">
+                        <Button
+                            onClick={() => changeDesignElement("doors", -1)}
+                            type="button"
+                        >
+                            <ArrowLeft />
+                        </Button>
+                        Doors
+                        <Button
+                            onClick={() => changeDesignElement("doors", 1)}
+                            type="button"
+                        >
+                            <ArrowRight />
+                        </Button>
+                    </div>
                 </div>
 
                 <div>
