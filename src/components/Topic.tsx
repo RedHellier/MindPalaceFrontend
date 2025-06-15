@@ -1,10 +1,7 @@
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { supabase } from "@/supabaseClient";
-import house1 from "@/assets/house1.jpg";
-import igloo from "@/assets/igloo.jpg";
-import square from "@/assets/square.jpg";
 import { displayName } from "@/lib/utils";
+import Canvas from "@/components/Canvas";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 interface TopicProps {
@@ -57,19 +54,7 @@ const Topic = (props: TopicProps) => {
                     className="hover:cursor-pointer"
                     onClick={() => handleClick(title)}
                 >
-                    <Image
-                        src={
-                            design === "house1"
-                                ? house1
-                                : design === "igloo"
-                                ? igloo
-                                : square
-                        }
-                        width="200"
-                        height="300"
-                        alt={`${title} image`}
-                        className="rounded-lg"
-                    ></Image>
+                    <Canvas image={design} />
                     <h1
                         className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
                     >

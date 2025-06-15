@@ -5,6 +5,8 @@ import { supabase } from "../../supabaseClient";
 import clsx from "clsx";
 import BackButton from "@/components/BackButton";
 import NewPopUp from "@/components/NewPopUp";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -94,6 +96,15 @@ export default function NewTopicPage() {
                         <option value="igloo">Igloo</option>
                         <option value="square">Square</option>
                     </select>
+                </div>
+
+                <div>
+                    <Button>
+                        <ArrowLeft />
+                    </Button>
+                    <Button>
+                        <ArrowRight />
+                    </Button>
                 </div>
 
                 <div>
