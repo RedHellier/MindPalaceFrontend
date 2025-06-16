@@ -14,7 +14,7 @@ type NewTopicProps = {
 
 export default function NewTopicPage({ topicTitle }: NewTopicProps) {
     const [title, setTitle] = useState("");
-    const [design, setDesign] = useState("house1");
+    const [design, setDesign] = useState("000");
     const [colour, setColour] = useState("text-black");
     const [error, setError] = useState("");
     const [showPopUp, setShowPopUp] = useState(false);
@@ -77,26 +77,6 @@ export default function NewTopicPage({ topicTitle }: NewTopicProps) {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         required
                     />
-                </div>
-
-                <div>
-                    <label
-                        htmlFor="design"
-                        className="block text-sm font-medium text-gray-600 mb-1"
-                    >
-                        Design
-                    </label>
-                    <select
-                        data-cy="subtopic-design"
-                        id="design"
-                        value={design}
-                        onChange={(e) => setDesign(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
-                        <option value="house1">House</option>
-                        <option value="igloo">Igloo</option>
-                        <option value="square">Square</option>
-                    </select>
                 </div>
 
                 <div>

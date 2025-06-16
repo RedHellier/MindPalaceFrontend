@@ -1,9 +1,5 @@
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { supabase } from "@/supabaseClient";
-import house1 from "@/assets/house1.jpg";
-import igloo from "@/assets/igloo.jpg";
-import square from "@/assets/square.jpg";
 import { displayName } from "@/lib/utils";
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -18,7 +14,7 @@ interface SubtopicProps {
 
 const Subtopic = (props: SubtopicProps) => {
     const router = useRouter();
-    const { id, title, topicTitle, design, colour, refresh } = props;
+    const { id, title, topicTitle, colour, refresh } = props;
 
     const handleClick = (title: string) => {
         router.push(`/${topicTitle}/${title}`);
@@ -49,19 +45,6 @@ const Subtopic = (props: SubtopicProps) => {
                     className="hover:cursor-pointer"
                     onClick={() => handleClick(title)}
                 >
-                    <Image
-                        src={
-                            design === "house1"
-                                ? house1
-                                : design === "igloo"
-                                ? igloo
-                                : square
-                        }
-                        width="200"
-                        height="300"
-                        alt={`${title} image`}
-                        className="rounded-lg"
-                    ></Image>
                     <h1
                         className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
                     >
