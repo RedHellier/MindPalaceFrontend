@@ -14,7 +14,7 @@ type NewTopicProps = {
 
 export default function NewTopicPage({ topicTitle }: NewTopicProps) {
     const [title, setTitle] = useState("");
-    const [design, setDesign] = useState("000");
+    const design = "000";
     const [colour, setColour] = useState("text-black");
     const [error, setError] = useState("");
     const [showPopUp, setShowPopUp] = useState(false);
