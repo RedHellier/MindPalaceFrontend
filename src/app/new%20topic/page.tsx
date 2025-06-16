@@ -96,26 +96,6 @@ export default function NewTopicPage() {
                     />
                 </div>
 
-                <div>
-                    <label
-                        htmlFor="design"
-                        className="block text-sm font-medium text-gray-600 mb-1"
-                    >
-                        Design
-                    </label>
-                    <select
-                        data-cy="topic-design"
-                        id="design"
-                        value={design}
-                        onChange={(e) => setDesign(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
-                        <option value="house1">House</option>
-                        <option value="igloo">Igloo</option>
-                        <option value="square">Square</option>
-                    </select>
-                </div>
-
                 <div className="flex flex-col items-center justify-between text-gray-600 mb-4">
                     <Canvas width={250} height={300} design={design}></Canvas>
                     <div className="flex items-center justify-between w-full mt-2">

@@ -54,7 +54,7 @@ const Topic = (props: TopicProps) => {
                     className="hover:cursor-pointer"
                     onClick={() => handleClick(title)}
                 >
-                    <Canvas design={design} />
+                    <Canvas design={design} width={200} height={300} />
                     <h1
                         className={`mt-2 text-center text-lg font-semibold text-gray-700 ${colour}`}
                     >
