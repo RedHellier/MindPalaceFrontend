@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Documentation by deepwiki
+[DeepWiki Docs](https://deepwiki.com/fac-31/Pro0428-MindPalaceFrontEnd/1-overview)
+
 ## Getting Started
 
 First, run the development server:
